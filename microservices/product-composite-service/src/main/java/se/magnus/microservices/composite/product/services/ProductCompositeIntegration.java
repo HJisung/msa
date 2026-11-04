@@ -2,10 +2,15 @@ package se.magnus.microservices.composite.product.services;
 
 import static org.springframework.http.HttpMethod.GET;
 
+import java.util.ArrayList;
 import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import se.magnus.api.core.product.Product;
 import se.magnus.api.core.product.ProductService;
@@ -13,11 +18,18 @@ import se.magnus.api.core.recommendation.Recommendation;
 import se.magnus.api.core.recommendation.RecommendationService;
 import se.magnus.api.core.review.Review;
 import se.magnus.api.core.review.ReviewService;
+import se.magnus.api.exceptions.InvalidInputException;
+import se.magnus.api.exceptions.NotFoundException;
+import se.magnus.util.http.HttpErrorInfo;
+import tools.jackson.core.JacksonException;
 import tools.jackson.databind.ObjectMapper;
 
 @Component
 public class ProductCompositeIntegration
         implements ProductService, RecommendationService, ReviewService {
+
+    private static final Logger LOG =
+            LoggerFactory.getLogger(ProductCompositeIntegration.class);
 
     private final RestTemplate restTemplate;
     private final ObjectMapper mapper;
@@ -61,37 +73,95 @@ public class ProductCompositeIntegration
                 reviewServicePort + "/review?productId=";
     }
 
+    @Override
     public Product getProduct(int productId) {
-        String url = productServiceUrl + productId;
-        Product product = restTemplate.getForObject(url, Product.class);
-        return product;
+        try {
+            String url = productServiceUrl + productId;
+            LOG.debug("Will call getProduct API on URL: {}", url);
+
+            Product product = restTemplate.getForObject(url, Product.class);
+            LOG.debug("Found a product with id: {}", product.getProductId());
+
+            return product;
+
+        } catch (HttpClientErrorException ex) {
+            switch (HttpStatus.resolve(ex.getStatusCode().value())) {
+                case NOT_FOUND:
+                    throw new NotFoundException(getErrorMessage(ex));
+
+                case UNPROCESSABLE_CONTENT:
+                    throw new InvalidInputException(getErrorMessage(ex));
+
+                default:
+                    LOG.warn("Got an unexpected HTTP error: {}, will rethrow it",
+                            ex.getStatusCode());
+                    LOG.warn("Error body: {}", ex.getResponseBodyAsString());
+                    throw ex;
+            }
+        }
     }
 
+    private String getErrorMessage(HttpClientErrorException ex) {
+        try {
+            return mapper.readValue(
+                    ex.getResponseBodyAsString(), HttpErrorInfo.class
+            ).getMessage();
+        } catch (JacksonException jsonEx) {
+            return ex.getMessage();
+        }
+    }
+
+    @Override
     public List<Recommendation> getRecommendations(int productId) {
-        String url = recommendationServiceUrl + productId;
+        try {
+            String url = recommendationServiceUrl + productId;
+            LOG.debug("Will call getRecommendations API on URL: {}", url);
 
-        List<Recommendation> recommendations =
-                restTemplate.exchange(
-                        url,
-                        GET,
-                        null,
-                        new ParameterizedTypeReference<List<Recommendation>>() {}
-                ).getBody();
+            List<Recommendation> recommendations =
+                    restTemplate.exchange(
+                            url,
+                            GET,
+                            null,
+                            new ParameterizedTypeReference<List<Recommendation>>() {}
+                    ).getBody();
 
-        return recommendations;
+            LOG.debug("Found {} recommendations for a product with id: {}",
+                    recommendations.size(), productId);
+
+            return recommendations;
+
+        } catch (Exception ex) {
+            LOG.warn("Got an exception while requesting recommendations, "
+                    + "return zero recommendations: {}", ex.getMessage());
+
+            return new ArrayList<>();
+        }
     }
 
+    @Override
     public List<Review> getReviews(int productId) {
-        String url = reviewServiceUrl + productId;
+        try {
+            String url = reviewServiceUrl + productId;
+            LOG.debug("Will call getReviews API on URL: {}", url);
 
-        List<Review> reviews =
-                restTemplate.exchange(
-                        url,
-                        GET,
-                        null,
-                        new ParameterizedTypeReference<List<Review>>() {}
-                ).getBody();
+            List<Review> reviews =
+                    restTemplate.exchange(
+                            url,
+                            GET,
+                            null,
+                            new ParameterizedTypeReference<List<Review>>() {}
+                    ).getBody();
 
-        return reviews;
+            LOG.debug("Found {} reviews for a product with id: {}",
+                    reviews.size(), productId);
+
+            return reviews;
+
+        } catch (Exception ex) {
+            LOG.warn("Got an exception while requesting reviews, "
+                    + "return zero reviews: {}", ex.getMessage());
+
+            return new ArrayList<>();
+        }
     }
 }
