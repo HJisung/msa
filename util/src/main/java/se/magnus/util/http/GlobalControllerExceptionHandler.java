@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import se.magnus.api.exceptions.InvalidInputException;
 import se.magnus.api.exceptions.NotFoundException;
 
+
 @RestControllerAdvice
 class GlobalControllerExceptionHandler {
 
