@@ -1,5 +1,5 @@
 server:
-  port: 8080
+  port: 7002
 
 logging:
   level:
@@ -10,6 +10,12 @@ spring:
   web:
     error:
       include-message: always
-#  config:
-#    activate:
-#      on-profile: docker
+
+---
+spring:
+  config:
+    activate:
+      on-profile: docker
+
+server:
+  port: 8080
