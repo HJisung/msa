@@ -1,15 +1,22 @@
 package se.magnus.api.composite.product;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class ReviewSummary {
 
   private final int reviewId;
   private final String author;
   private final String subject;
 
-  public ReviewSummary(int reviewId, String author, String subject) {
+  private final String content;
+
+  @JsonCreator
+  public ReviewSummary(@JsonProperty("reviewId") int reviewId, @JsonProperty("author") String author, @JsonProperty("subject") String subject, @JsonProperty("content") String content) {
     this.reviewId = reviewId;
     this.author = author;
     this.subject = subject;
+    this.content = content;
   }
 
   public int getReviewId() {
@@ -22,5 +29,8 @@ public class ReviewSummary {
 
   public String getSubject() {
     return subject;
+  }
+  public String getContent() {
+    return content;
   }
 }

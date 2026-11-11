@@ -78,6 +78,26 @@ function waitForService() {
   echo "DONE, continues..."
 }
 
+function recreateComposite() {
+  local productId=$1
+  local composite=$2
+  assertCurl 200 "curl -s -X DELETE http://$HOST:$PORT/product-composite/$productId"
+  assertCurl 200 "curl -s -X POST http://$HOST:$PORT/product-composite -H 'Content-Type: application/json' --data '$composite'"
+}
+
+function setupTestdata() {
+  local body
+  body='{"productId":'"$PROD_ID_REVS_RECS"',"name":"product 1","weight":1,"recommendations":[{"recommendationId":1,"author":"author 1","rate":1,"content":"content 1"},{"recommendationId":2,"author":"author 2","rate":2,"content":"content 2"},{"recommendationId":3,"author":"author 3","rate":3,"content":"content 3"}],"reviews":[{"reviewId":1,"author":"author 1","subject":"subject 1","content":"content 1"},{"reviewId":2,"author":"author 2","subject":"subject 2","content":"content 2"},{"reviewId":3,"author":"author 3","subject":"subject 3","content":"content 3"}]}'
+  recreateComposite "$PROD_ID_REVS_RECS" "$body"
+
+  body='{"productId":'"$PROD_ID_NO_RECS"',"name":"product 113","weight":113,"reviews":[{"reviewId":1,"author":"author 1","subject":"subject 1","content":"content 1"},{"reviewId":2,"author":"author 2","subject":"subject 2","content":"content 2"},{"reviewId":3,"author":"author 3","subject":"subject 3","content":"content 3"}]}'
+  recreateComposite "$PROD_ID_NO_RECS" "$body"
+
+  body='{"productId":'"$PROD_ID_NO_REVS"',"name":"product 213","weight":213,"recommendations":[{"recommendationId":1,"author":"author 1","rate":1,"content":"content 1"},{"recommendationId":2,"author":"author 2","rate":2,"content":"content 2"},{"recommendationId":3,"author":"author 3","rate":3,"content":"content 3"}]}'
+  recreateComposite "$PROD_ID_NO_REVS" "$body"
+
+}
+
 set -e
 
 echo "Start Tests:" `date`
@@ -94,7 +114,8 @@ then
   docker compose up -d
 fi
 
-waitForService curl http://$HOST:$PORT/product-composite/$PROD_ID_REVS_RECS
+waitForService curl -X DELETE http://$HOST:$PORT/product-composite/$PROD_ID_NOT_FOUND
+setupTestdata
 
 # Verify that a normal request works, expect three recommendations and three reviews
 assertCurl 200 "curl http://$HOST:$PORT/product-composite/$PROD_ID_REVS_RECS -s"

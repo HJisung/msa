@@ -1,5 +1,8 @@
 package se.magnus.api.composite.product;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.List;
 
 public class ProductAggregate {
@@ -10,13 +13,14 @@ public class ProductAggregate {
   private final List<ReviewSummary> reviews;
   private final ServiceAddresses serviceAddresses;
 
+  @JsonCreator
   public ProductAggregate(
-    int productId,
-    String name,
-    int weight,
-    List<RecommendationSummary> recommendations,
-    List<ReviewSummary> reviews,
-    ServiceAddresses serviceAddresses) {
+    @JsonProperty("productId") int productId,
+    @JsonProperty("name") String name,
+    @JsonProperty("weight") int weight,
+    @JsonProperty("recommendations") List<RecommendationSummary> recommendations,
+    @JsonProperty("reviews") List<ReviewSummary> reviews,
+    @JsonProperty("serviceAddresses") ServiceAddresses serviceAddresses) {
 
     this.productId = productId;
     this.name = name;
