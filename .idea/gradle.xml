@@ -5,6 +5,16 @@
       <GradleProjectSettings>
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
         <option name="gradleJvm" value="temurin-21 (WSL)" />
+        <option name="modules">
+          <set>
+            <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/microservices" />
+            <option value="$PROJECT_DIR$/microservices/product-composite-service" />
+            <option value="$PROJECT_DIR$/microservices/product-service" />
+            <option value="$PROJECT_DIR$/microservices/recommendation-service" />
+            <option value="$PROJECT_DIR$/microservices/review-service" />
+          </set>
+        </option>
       </GradleProjectSettings>
     </option>
   </component>
