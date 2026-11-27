@@ -11,14 +11,13 @@ import se.magnus.microservices.core.recommendation.persistence.RecommendationEnt
 import se.magnus.microservices.core.recommendation.services.RecommendationMapper;
 
 class MapperTests {
-
   private RecommendationMapper mapper = Mappers.getMapper(RecommendationMapper.class);
+
 
   @Test
   void mapperTests() {
 
     assertNotNull(mapper);
-
     Recommendation api = new Recommendation(1, 2, "a", 4, "C", "adr");
 
     RecommendationEntity entity = mapper.apiToEntity(api);

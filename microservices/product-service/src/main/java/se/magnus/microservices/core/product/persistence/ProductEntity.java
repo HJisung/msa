@@ -73,3 +73,4 @@ public class ProductEntity {
     this.weight = weight;
   }
 }
+

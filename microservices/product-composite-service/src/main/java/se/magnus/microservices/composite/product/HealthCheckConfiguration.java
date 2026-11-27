@@ -28,3 +28,4 @@ public class HealthCheckConfiguration {
     return CompositeReactiveHealthContributor.fromMap(registry);
   }
 }
+

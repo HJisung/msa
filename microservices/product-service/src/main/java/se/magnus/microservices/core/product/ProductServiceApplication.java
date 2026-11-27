@@ -45,3 +45,4 @@ public class ProductServiceApplication {
     resolver.resolveIndexFor(ProductEntity.class).forEach(e -> indexOps.createIndex(e).block());
   }
 }
+

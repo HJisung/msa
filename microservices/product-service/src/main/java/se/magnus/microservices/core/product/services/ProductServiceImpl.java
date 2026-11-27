@@ -15,6 +15,7 @@ import se.magnus.microservices.core.product.persistence.ProductEntity;
 import se.magnus.microservices.core.product.persistence.ProductRepository;
 import se.magnus.util.http.ServiceUtil;
 
+
 @RestController
 public class ProductServiceImpl implements ProductService {
 
