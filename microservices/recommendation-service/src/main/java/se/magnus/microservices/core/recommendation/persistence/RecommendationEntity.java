@@ -14,13 +14,11 @@ public class RecommendationEntity {
 
   @Version
   private Integer version;
-
   private int productId;
   private int recommendationId;
   private String author;
   private int rating;
   private String content;
-
   public RecommendationEntity() {
   }
 

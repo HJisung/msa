@@ -14,20 +14,16 @@ import se.magnus.util.http.ServiceUtil;
 public class RecommendationServiceImpl implements RecommendationService {
 
   private static final Logger LOG = LoggerFactory.getLogger(RecommendationServiceImpl.class);
-
   private final ServiceUtil serviceUtil;
-
   public RecommendationServiceImpl(ServiceUtil serviceUtil) {
     this.serviceUtil = serviceUtil;
   }
 
   @Override
   public List<Recommendation> getRecommendations(int productId) {
-
     if (productId < 1) {
       throw new InvalidInputException("Invalid productId: " + productId);
     }
-
     if (productId == 113) {
       LOG.debug("No recommendations found for productId: {}", productId);
       return new ArrayList<>();
