@@ -13,7 +13,7 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 
 @AutoConfigureWebTestClient
 @SpringBootTest(webEnvironment = RANDOM_PORT)
-class ReviewServiceApplicationTests {
+class ReviewServiceApplicationTests extends MySqlTestBase {
 
   @Autowired private WebTestClient client;
 
