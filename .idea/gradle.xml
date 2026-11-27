@@ -8,11 +8,13 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/api" />
             <option value="$PROJECT_DIR$/microservices" />
             <option value="$PROJECT_DIR$/microservices/product-composite-service" />
             <option value="$PROJECT_DIR$/microservices/product-service" />
             <option value="$PROJECT_DIR$/microservices/recommendation-service" />
             <option value="$PROJECT_DIR$/microservices/review-service" />
+            <option value="$PROJECT_DIR$/util" />
           </set>
         </option>
       </GradleProjectSettings>
