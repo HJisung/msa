@@ -1,8 +1,6 @@
 package se.magnus.api.core.product;
 
 public class Product {
-  // Fields are not final: Jackson 3 does not set final fields when deserializing
-  // (MapperFeature.ALLOW_FINAL_FIELDS_AS_MUTATORS is disabled by default).
   private int productId;
   private String name;
   private int weight;
@@ -36,5 +34,21 @@ public class Product {
 
   public String getServiceAddress() {
     return serviceAddress;
+  }
+
+  public void setProductId(int productId) {
+    this.productId = productId;
+  }
+
+  public void setName(String name) {
+    this.name = name;
+  }
+
+  public void setWeight(int weight) {
+    this.weight = weight;
+  }
+
+  public void setServiceAddress(String serviceAddress) {
+    this.serviceAddress = serviceAddress;
   }
 }

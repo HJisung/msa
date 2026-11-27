@@ -1,8 +1,6 @@
 package se.magnus.api.core.review;
 
 public class Review {
-  // Fields are not final: Jackson 3 does not set final fields when deserializing
-  // (MapperFeature.ALLOW_FINAL_FIELDS_AS_MUTATORS is disabled by default).
   private int productId;
   private int reviewId;
   private String author;
@@ -57,5 +55,29 @@ public class Review {
 
   public String getServiceAddress() {
     return serviceAddress;
+  }
+
+  public void setProductId(int productId) {
+    this.productId = productId;
+  }
+
+  public void setReviewId(int reviewId) {
+    this.reviewId = reviewId;
+  }
+
+  public void setAuthor(String author) {
+    this.author = author;
+  }
+
+  public void setSubject(String subject) {
+    this.subject = subject;
+  }
+
+  public void setContent(String content) {
+    this.content = content;
+  }
+
+  public void setServiceAddress(String serviceAddress) {
+    this.serviceAddress = serviceAddress;
   }
 }
